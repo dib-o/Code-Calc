@@ -286,6 +286,7 @@ const App = () => {
       } else if (id === "=") {
         try {
           const expression = sScreenValue
+            .replaceAll(/A/g, "A")
             .replaceAll(
               /Σ\(\s*([^)]+?)\s*,\s*(-?\d+)\s*,\s*(-?\d+)\s*\)/g,
               (_, expr, start, end) => `SOF(i => ${expr}, ${start}, ${end})`
@@ -379,7 +380,7 @@ const App = () => {
             .replaceAll(/\be\b/g, "Math.E")
             .replaceAll(/(\d+(\.\d+)?)ᴇ(-?\d+)/g, "SNotation($1, $3)")
             .replaceAll(/([^)]+)\∠([^)]+)/g, "polarToComplex($1, $2)");
-          const evalResult = new Function(`return ${expression}`)();
+          const evalResult = eval(expression);
           setSResult(evalResult.toString());
         } catch {
           setSResult("Error");
