@@ -76,7 +76,7 @@ const App = () => {
             .replaceAll(/(\d+(\.\d+)?)%/g, "($1/100)")
             .replaceAll(/√(\d+(\.\d+)?)/g, "Math.sqrt($1)");
 
-          const evalResult = eval(expression);
+          const evalResult = new Function(`return ${expression}`)();
           setResult(evalResult.toString());
         } catch {
           setResult("Error");
@@ -86,35 +86,9 @@ const App = () => {
       } else if (id === "MR") {
         setScreenValue((prev) => prev + memory.toString());
       } else if (id === "M+") {
-        try {
-          const current = eval(
-            screenValue
-              .replaceAll(/x/g, "*")
-              .replaceAll(/÷/g, "/")
-              .replaceAll(/⋅/g, ".")
-              .replaceAll(/(\d+(\.\d+)?)%/g, "($1/100)")
-              .replaceAll(/√(\d+(\.\d+)?)/g, "Math.sqrt($1)")
-          );
-          if (!isNaN(current)) {
-            setMemory((prev) => Number(prev) + current);
-            setScreenValue(""); // clears after storing like Casio
-          }
-        } catch {}
+        setMemory((prev) => Number(prev) + Number(result));
       } else if (id === "M-") {
-        try {
-          const current = eval(
-            screenValue
-              .replaceAll(/x/g, "*")
-              .replaceAll(/÷/g, "/")
-              .replaceAll(/⋅/g, ".")
-              .replaceAll(/(\d+(\.\d+)?)%/g, "($1/100)")
-              .replaceAll(/√(\d+(\.\d+)?)/g, "Math.sqrt($1)")
-          );
-          if (!isNaN(current)) {
-            setMemory((prev) => Number(prev) - current);
-            setScreenValue(""); // clears after storing like Casio
-          }
-        } catch {}
+        setMemory((prev) => Number(prev) - Number(result));
       } else {
         setScreenValue((prev) => prev + id);
       }
@@ -310,8 +284,6 @@ const App = () => {
         );
         disabledKeys();
       } else if (id === "=") {
-        //console.log(sScreenValue.replaceAll(/SumOf\(\)/g, eval("1+5+2")));
-        
         try {
           const expression = sScreenValue
             .replaceAll(
@@ -407,7 +379,7 @@ const App = () => {
             .replaceAll(/\be\b/g, "Math.E")
             .replaceAll(/(\d+(\.\d+)?)ᴇ(-?\d+)/g, "SNotation($1, $3)")
             .replaceAll(/([^)]+)\∠([^)]+)/g, "polarToComplex($1, $2)");
-          const evalResult = eval(expression);
+          const evalResult = new Function(`return ${expression}`)();
           setSResult(evalResult.toString());
         } catch {
           setSResult("Error");
@@ -663,7 +635,7 @@ const App = () => {
     POF(0, 2, 2);
     JunkShop();
     polarToComplex(0, 2);
-    console.log(A,B,C,D,F,T,X,Y,Z, deciValue);
+    console.log(A, B, C, D, F, T, X, Y, Z, deciValue);
     decimalToFraction;
     // To meet the requirements of not using the variable.
   };
